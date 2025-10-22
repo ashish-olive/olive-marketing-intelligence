@@ -46,6 +46,13 @@ export const dismissSignal = (signalId) =>
 export const predictScenario = (scenarioData) => 
   api.post('/scenarios/predict', scenarioData);
 
+// Funnel endpoints
+export const getFunnelSummary = (days = 30) => 
+  api.get(`/funnel/summary?days=${days}`);
+
+export const getFunnelTrends = (days = 30) => 
+  api.get(`/funnel/trends?days=${days}`);
+
 // Health check
 export const healthCheck = () => 
   api.get('/health');

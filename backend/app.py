@@ -245,6 +245,89 @@ def organic_trends():
 
 
 # ============================================================
+# FUNNEL ENDPOINTS
+# ============================================================
+
+@app.route('/api/funnel/summary', methods=['GET'])
+def funnel_summary():
+    """Get funnel summary metrics"""
+    days = int(request.args.get('days', 30))
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=days)
+    
+    # Aggregate funnel metrics
+    metrics = db.session.query(
+        func.sum(DailyCampaignPerformance.impressions).label('total_impressions'),
+        func.sum(DailyCampaignPerformance.clicks).label('total_clicks'),
+        func.sum(DailyCampaignPerformance.installs).label('total_installs'),
+        func.sum(DailyCampaignPerformance.spend).label('total_spend'),
+        func.avg(DailyCampaignPerformance.ctr).label('avg_ctr'),
+        func.avg(DailyCampaignPerformance.cvr).label('avg_cvr'),
+        func.avg(DailyCampaignPerformance.retention_d1).label('avg_d1'),
+        func.avg(DailyCampaignPerformance.retention_d7).label('avg_d7')
+    ).filter(
+        DailyCampaignPerformance.date >= start_date,
+        DailyCampaignPerformance.date <= end_date
+    ).first()
+    
+    impressions = int(metrics.total_impressions or 0)
+    clicks = int(metrics.total_clicks or 0)
+    installs = int(metrics.total_installs or 0)
+    spend = float(metrics.total_spend or 0)
+    
+    # Calculate derived metrics
+    cpm = (spend / (impressions / 1000)) if impressions > 0 else 0
+    cpc = (spend / clicks) if clicks > 0 else 0
+    cpi = (spend / installs) if installs > 0 else 0
+    
+    return jsonify({
+        'impressions': impressions,
+        'clicks': clicks,
+        'installs': installs,
+        'spend': round(spend, 2),
+        'cpm': round(cpm, 2),
+        'cpc': round(cpc, 2),
+        'cpi': round(cpi, 2),
+        'ctr': round((metrics.avg_ctr or 0) * 100, 2),
+        'cvr': round((metrics.avg_cvr or 0) * 100, 2),
+        'retention_d1': round((metrics.avg_d1 or 0) * 100, 2),
+        'retention_d7': round((metrics.avg_d7 or 0) * 100, 2)
+    })
+
+
+@app.route('/api/funnel/trends', methods=['GET'])
+def funnel_trends():
+    """Get funnel metrics over time"""
+    days = int(request.args.get('days', 30))
+    end_date = datetime.now().date()
+    start_date = end_date - timedelta(days=days)
+    
+    daily_data = db.session.query(
+        DailyCampaignPerformance.date,
+        func.sum(DailyCampaignPerformance.impressions).label('impressions'),
+        func.sum(DailyCampaignPerformance.clicks).label('clicks'),
+        func.sum(DailyCampaignPerformance.installs).label('installs'),
+        func.avg(DailyCampaignPerformance.ctr).label('ctr'),
+        func.avg(DailyCampaignPerformance.cvr).label('cvr')
+    ).filter(
+        DailyCampaignPerformance.date >= start_date,
+        DailyCampaignPerformance.date <= end_date
+    ).group_by(DailyCampaignPerformance.date
+    ).order_by(DailyCampaignPerformance.date).all()
+    
+    trends = [{
+        'date': str(row.date),
+        'impressions': int(row.impressions or 0),
+        'clicks': int(row.clicks or 0),
+        'installs': int(row.installs or 0),
+        'ctr': round((row.ctr or 0) * 100, 2),
+        'cvr': round((row.cvr or 0) * 100, 2)
+    } for row in daily_data]
+    
+    return jsonify(trends)
+
+
+# ============================================================
 # SIGNALS ENDPOINTS
 # ============================================================
 
