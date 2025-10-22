@@ -4,21 +4,39 @@ Master Training Script
 Train all ML models on GPU in Google Colab
 """
 import sys
+import os
 from pathlib import Path
 import torch
 import json
 from datetime import datetime
 import argparse
 
-# Add project root and ml-models to path
-project_root = Path(__file__).parent.parent.parent
-ml_models_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-sys.path.insert(0, str(ml_models_root))
+# Add paths
+current_dir = Path(__file__).parent
+ml_models_dir = current_dir.parent
+project_root = ml_models_dir.parent
+trainers_dir = ml_models_dir / 'trainers'
 
-from trainers.ltv_predictor import train_ltv_model
-from trainers.campaign_forecaster import train_campaign_model
-from trainers.churn_predictor import train_churn_model
+sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(ml_models_dir))
+sys.path.insert(0, str(trainers_dir))
+
+# Import training functions
+import importlib.util
+
+def load_trainer(module_name, file_path):
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+ltv_module = load_trainer('ltv_predictor', trainers_dir / 'ltv_predictor.py')
+campaign_module = load_trainer('campaign_forecaster', trainers_dir / 'campaign_forecaster.py')
+churn_module = load_trainer('churn_predictor', trainers_dir / 'churn_predictor.py')
+
+train_ltv_model = ltv_module.train_ltv_model
+train_campaign_model = campaign_module.train_campaign_model
+train_churn_model = churn_module.train_churn_model
 
 
 def main():
