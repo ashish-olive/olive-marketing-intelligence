@@ -40,6 +40,10 @@ def prepare_sequences(db_path, lookback=14, forecast=7):
     """Prepare time series sequences from campaign data"""
     print("Loading campaign data...")
     
+    # Convert to absolute path
+    from pathlib import Path
+    db_path = Path(db_path).resolve()
+    
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

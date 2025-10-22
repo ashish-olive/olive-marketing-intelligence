@@ -41,6 +41,10 @@ def prepare_churn_data(db_path):
     """Prepare churn prediction data"""
     print("Loading user data...")
     
+    # Convert to absolute path
+    from pathlib import Path
+    db_path = Path(db_path).resolve()
+    
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False

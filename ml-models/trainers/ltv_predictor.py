@@ -42,6 +42,10 @@ def prepare_data(db_path):
     """Load and prepare data from database"""
     print("Loading data from database...")
     
+    # Convert to absolute path
+    from pathlib import Path
+    db_path = Path(db_path).resolve()
+    
     # Create Flask app context
     app = Flask(__name__)
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
