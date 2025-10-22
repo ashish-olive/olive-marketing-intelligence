@@ -1,11 +1,11 @@
 # Data Pipeline Requirements (Cloud - Colab)
 # For data generation only
 
-# Core dependencies
-numpy==1.26.3
-pandas==2.1.4
+# Core dependencies (Colab-compatible versions)
+numpy>=2.0.0
+pandas>=2.2.0
 faker==22.0.0
-python-dateutil==2.8.2
+python-dateutil>=2.9.0
 
 # Database
 SQLAlchemy==2.0.23
