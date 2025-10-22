@@ -56,10 +56,10 @@ function OrganicDashboard() {
   return (
     <Container maxWidth="xl">
       <Typography variant="h4" gutterBottom sx={{ color: '#1a1a1a', fontWeight: 600 }}>
-        Organic Dashboard
+        App Store & Brand Performance
       </Typography>
       <Typography variant="body1" gutterBottom sx={{ mb: 3, color: '#555555' }}>
-        Organic growth and engagement metrics
+        Non-paid growth, app store visibility, and brand sentiment metrics
       </Typography>
 
       {/* KPI Cards */}
@@ -70,6 +70,7 @@ function OrganicDashboard() {
             value={(summary?.organic_installs || 0).toLocaleString()}
             subtitle="Last 30 days"
             icon={TrendingUpIcon}
+            tooltip="Users who installed your app without clicking on paid ads - from app store search, word-of-mouth, press coverage, or social media. These are 'free' users with typically higher LTV."
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -78,14 +79,16 @@ function OrganicDashboard() {
             value={`#${Math.round(summary?.avg_app_store_rank || 0)}`}
             subtitle="Average rank"
             icon={StarIcon}
+            tooltip="Your app's average ranking position in the app store category over the last 30 days. Lower number = better visibility. Top 10 = featured placement. Rank affects organic install volume."
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <KPICard
             title="Sentiment Score"
-            value={(summary?.avg_sentiment || 0).toFixed(2)}
+            value={(summary?.avg_sentiment_score || 0).toFixed(2)}
             subtitle="Social sentiment"
             icon={ThumbUpIcon}
+            tooltip="Average sentiment of social media mentions and reviews (0-1 scale). Above 0.7 = positive brand perception. Below 0.5 = negative sentiment requiring attention. Affects organic growth."
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -94,6 +97,7 @@ function OrganicDashboard() {
             value={(summary?.total_social_mentions || 0).toLocaleString()}
             subtitle="Total mentions"
             icon={TrendingUpIcon}
+            tooltip="Total times your app was mentioned on social media, forums, and review sites in the last 30 days. Higher mentions = more brand awareness and potential for viral growth."
           />
         </Grid>
       </Grid>

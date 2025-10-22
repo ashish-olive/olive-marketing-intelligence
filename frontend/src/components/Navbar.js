@@ -13,7 +13,7 @@ function Navbar() {
   const navItems = [
     { label: 'Executive', path: '/executive' },
     { label: 'Paid Media', path: '/paid-media' },
-    { label: 'Organic', path: '/organic' },
+    { label: 'App Store & Brand', path: '/organic' },
     { label: 'Signals', path: '/signals' },
     { label: '🎯 Modeling', path: '/modeling' },
   ];
