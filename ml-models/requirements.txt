@@ -1,10 +1,10 @@
 # ML Models Requirements (Cloud - Colab with GPU)
 # For training ML models
 
-# PyTorch with CUDA support
-torch==2.1.0
-torchvision==0.16.0
-torchaudio==2.1.0
+# PyTorch with CUDA support (latest compatible version)
+torch>=2.2.0
+torchvision>=0.17.0
+torchaudio>=2.2.0
 
 # ML libraries
 scikit-learn==1.3.2
