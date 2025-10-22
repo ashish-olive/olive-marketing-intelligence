@@ -277,46 +277,55 @@ class CompleteDataGenerator:
         """Generate user sessions"""
         print("[5/7] Generating user sessions...")
         
-        # For testing, generate fewer sessions
-        target_sessions = min(self.users_target * 10, 5000000)
-        sessions_per_user = target_sessions // self.users_target
+        # Generate full session dataset
+        target_sessions = self.users_target * 10  # 10 sessions per user
+        sessions_per_user = 10
         
         print(f"  Target: {target_sessions:,} sessions ({sessions_per_user} per user avg)")
+        print(f"  This will take 3-5 minutes...")
         
-        # Sample users from database
-        sample_size = min(50000, self.users_target)
-        user_records = UserInstall.query.limit(sample_size).all()
+        # Process all users in batches
+        batch_size = 10000
+        total_users = UserInstall.query.count()
+        print(f"  Processing {total_users:,} users in batches of {batch_size:,}")
         
         sessions = []
-        for user in user_records:
-            num_sessions = int(np.random.uniform(1, sessions_per_user * 2))
+        processed = 0
+        
+        for offset in range(0, total_users, batch_size):
+            user_records = UserInstall.query.offset(offset).limit(batch_size).all()
             
-            for i in range(num_sessions):
-                session_date = user.install_date + timedelta(days=np.random.randint(0, 30))
+            for user in user_records:
+                num_sessions = int(np.random.uniform(1, sessions_per_user * 2))
                 
-                session = UserSession(
-                    user_id=user.user_id,
-                    session_id=str(uuid.uuid4()),
-                    session_date=session_date,
-                    session_start_time=datetime.combine(session_date, datetime.min.time()) + timedelta(hours=np.random.randint(0, 24)),
-                    duration_seconds=int(np.random.uniform(60, 1800)),
-                    revenue_this_session=np.random.uniform(0, 5) if user.is_payer and np.random.random() < 0.1 else 0,
-                    session_quality_score=np.random.uniform(60, 95)
-                )
-                sessions.append(session)
-                
-                if len(sessions) >= 10000:
-                    db.session.bulk_save_objects(sessions)
-                    db.session.commit()
-                    print(f"  → {len(sessions):,} sessions created...", end='\r')
-                    sessions = []
+                for i in range(num_sessions):
+                    session_date = user.install_date + timedelta(days=np.random.randint(0, 30))
+                    
+                    session = UserSession(
+                        user_id=user.user_id,
+                        session_id=str(uuid.uuid4()),
+                        session_date=session_date,
+                        session_start_time=datetime.combine(session_date, datetime.min.time()) + timedelta(hours=np.random.randint(0, 24)),
+                        duration_seconds=int(np.random.uniform(60, 1800)),
+                        revenue_this_session=np.random.uniform(0, 5) if user.is_payer and np.random.random() < 0.1 else 0,
+                        session_quality_score=np.random.uniform(60, 95)
+                    )
+                    sessions.append(session)
+                    
+                    if len(sessions) >= 10000:
+                        db.session.bulk_save_objects(sessions)
+                        db.session.commit()
+                        sessions = []
+            
+            processed += len(user_records)
+            print(f"  → Processed {processed:,}/{total_users:,} users...", end='\r')
         
         if sessions:
             db.session.bulk_save_objects(sessions)
             db.session.commit()
         
         total_sessions = UserSession.query.count()
-        print(f"  ✓ Created {total_sessions:,} user sessions\n")
+        print(f"\n  ✓ Created {total_sessions:,} user sessions\n")
     
     def generate_organic_metrics(self):
         """Generate daily organic metrics"""
