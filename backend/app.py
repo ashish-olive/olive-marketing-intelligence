@@ -133,10 +133,13 @@ def paid_channels():
         func.sum(DailyCampaignPerformance.installs).label('installs'),
         func.avg(DailyCampaignPerformance.cpi).label('cpi'),
         func.avg(DailyCampaignPerformance.roas_30d).label('roas')
-    ).join(Campaign).join(DailyCampaignPerformance).filter(
+    ).select_from(MarketingChannel
+    ).join(Campaign, Campaign.channel_id == MarketingChannel.id
+    ).join(DailyCampaignPerformance, DailyCampaignPerformance.campaign_id == Campaign.id
+    ).filter(
         DailyCampaignPerformance.date >= start_date,
         DailyCampaignPerformance.date <= end_date
-    ).group_by(MarketingChannel.id).all()
+    ).group_by(MarketingChannel.id, MarketingChannel.name, MarketingChannel.display_name).all()
     
     result = [{
         'channel': row.name,
@@ -165,7 +168,10 @@ def paid_campaigns():
         func.sum(DailyCampaignPerformance.installs).label('installs'),
         func.avg(DailyCampaignPerformance.cpi).label('cpi'),
         func.avg(DailyCampaignPerformance.roas_30d).label('roas')
-    ).join(MarketingChannel).join(DailyCampaignPerformance).filter(
+    ).select_from(Campaign
+    ).join(MarketingChannel, Campaign.channel_id == MarketingChannel.id
+    ).join(DailyCampaignPerformance, DailyCampaignPerformance.campaign_id == Campaign.id
+    ).filter(
         DailyCampaignPerformance.date >= start_date,
         DailyCampaignPerformance.date <= end_date
     )
@@ -173,7 +179,7 @@ def paid_campaigns():
     if channel:
         query = query.filter(MarketingChannel.name == channel)
     
-    campaigns = query.group_by(Campaign.id).all()
+    campaigns = query.group_by(Campaign.id, Campaign.name, MarketingChannel.name).all()
     
     result = [{
         'campaign': row.name,
