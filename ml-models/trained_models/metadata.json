@@ -1,0 +1,27 @@
+{
+  "train_date": "2025-10-22T18:50:02.019940",
+  "device": "cuda",
+  "epochs": 100,
+  "database": "instance/marketing.db",
+  "models": {
+    "ltv_predictor": {
+      "test_rmse": 0.29899834874810405,
+      "test_mae": 0.12625911831855774,
+      "best_val_loss": 0.03071329797232392,
+      "epochs_trained": 13
+    },
+    "campaign_forecaster": {
+      "test_rmse": 3.0508859157562256,
+      "test_mape": 63.83392810821533,
+      "best_val_loss": 67.05999692281087,
+      "epochs_trained": 17
+    },
+    "churn_predictor": {
+      "test_auc_roc": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1_score": 1.0,
+      "epochs_trained": 16
+    }
+  }
+}

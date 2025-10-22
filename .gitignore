@@ -29,10 +29,10 @@ instance/
 *.sqlite
 *.sqlite3
 
-# ML Models
-ml-models/trained_models/*.pth
-ml-models/trained_models/*.pkl
-ml-models/trained_models/metadata.json
+# ML Models - Checked into git for demo purposes (only 1.1MB total)
+# ml-models/trained_models/*.pth
+# ml-models/trained_models/*.pkl
+# ml-models/trained_models/metadata.json
 
 # Jupyter
 .ipynb_checkpoints
