@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Container, Typography, Paper, Box, TextField, Button, Grid,
-  Card, CardContent, Slider, Alert, Chip, Tabs, Tab
+  Card, CardContent, Slider, Alert, Chip, Tabs, Tab, Tooltip, IconButton
 } from '@mui/material';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
@@ -78,14 +78,26 @@ function ModelingDashboard() {
     <Paper sx={{ p: 2, height: '100%', bgcolor: `${color}.light`, borderLeft: 4, borderColor: `${color}.main` }}>
       <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 1 }}>
         <Icon sx={{ mr: 1, color: `${color}.main` }} />
-        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: `${color}.dark` }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 600, color: '#212121' }}>
           {title}
         </Typography>
       </Box>
-      <Typography variant="body2" color="text.secondary">
+      <Typography variant="body2" sx={{ color: '#424242' }}>
         {content}
       </Typography>
     </Paper>
+  );
+
+  // Label with Tooltip Component
+  const LabelWithTooltip = ({ label, tooltip }) => (
+    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+      <Typography sx={{ color: '#212121', fontWeight: 500 }}>{label}</Typography>
+      <Tooltip title={tooltip} arrow placement="top">
+        <IconButton size="small" sx={{ ml: 0.5, p: 0.5 }}>
+          <InfoOutlinedIcon sx={{ fontSize: 16, color: '#666' }} />
+        </IconButton>
+      </Tooltip>
+    </Box>
   );
 
   return (
@@ -143,7 +155,10 @@ function ModelingDashboard() {
                 Campaign Parameters
               </Typography>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Campaign Budget</Typography>
+                <LabelWithTooltip 
+                  label="Campaign Budget" 
+                  tooltip="Total amount you plan to spend on this marketing campaign. Higher budgets acquire more users but require higher ROI to be profitable."
+                />
                 <TextField
                   fullWidth
                   type="number"
@@ -154,7 +169,10 @@ function ModelingDashboard() {
                 <Slider value={budget} onChange={(e, v) => setBudget(v)} min={10000} max={500000} step={10000} sx={{ mt: 2 }} />
               </Box>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Target CPI</Typography>
+                <LabelWithTooltip 
+                  label="Target Cost Per Install (CPI)" 
+                  tooltip="Expected cost to acquire one user. Industry average: $0.50-$3.00. Lower CPI means more efficient marketing and better ROI."
+                />
                 <TextField
                   fullWidth
                   type="number"
@@ -176,10 +194,14 @@ function ModelingDashboard() {
               </Typography>
               {!campaignPrediction ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-                  <Typography color="text.secondary">Click "Generate Prediction" to see results</Typography>
+                  <Typography sx={{ color: '#666' }}>Click "Generate Prediction" to see results</Typography>
                 </Box>
               ) : (
                 <>
+                  <Box sx={{ mb: 2, p: 1.5, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                    <Typography variant="caption" sx={{ color: '#212121', fontWeight: 600 }}>Model Accuracy:</Typography>
+                    <Typography variant="body2" sx={{ color: '#424242' }}>Campaign Forecaster (LSTM) - MAPE 64%</Typography>
+                  </Box>
                   <Alert severity={campaignPrediction.profitable ? "success" : "warning"} sx={{ mb: 2 }}>
                     {campaignPrediction.profitable ? "✅ Profitable campaign!" : "⚠️ May not be profitable"}
                   </Alert>
@@ -188,8 +210,11 @@ function ModelingDashboard() {
                       <Card sx={{ bgcolor: '#e3f2fd' }}>
                         <CardContent>
                           <PeopleIcon color="primary" />
-                          <Typography variant="h4">{campaignPrediction.installs}</Typography>
-                          <Typography variant="caption">Expected Installs</Typography>
+                          <Typography variant="h4" sx={{ color: '#212121' }}>{campaignPrediction.installs}</Typography>
+                          <LabelWithTooltip 
+                            label="Expected Installs" 
+                            tooltip="Number of users predicted to install your app with this budget and CPI"
+                          />
                         </CardContent>
                       </Card>
                     </Grid>
@@ -197,8 +222,11 @@ function ModelingDashboard() {
                       <Card sx={{ bgcolor: '#f3e5f5' }}>
                         <CardContent>
                           <AttachMoneyIcon color="secondary" />
-                          <Typography variant="h4">{campaignPrediction.ltv}</Typography>
-                          <Typography variant="caption">Expected LTV</Typography>
+                          <Typography variant="h4" sx={{ color: '#212121' }}>{campaignPrediction.ltv}</Typography>
+                          <LabelWithTooltip 
+                            label="Expected Lifetime Value" 
+                            tooltip="Total revenue these users will generate over their lifetime (180 days)"
+                          />
                         </CardContent>
                       </Card>
                     </Grid>
@@ -206,15 +234,15 @@ function ModelingDashboard() {
                       <Card sx={{ bgcolor: campaignPrediction.profitable ? '#e8f5e9' : '#fff3e0' }}>
                         <CardContent>
                           <TrendingUpIcon />
-                          <Typography variant="h4">{campaignPrediction.roi}</Typography>
-                          <Typography variant="caption">ROI</Typography>
+                          <Typography variant="h4" sx={{ color: '#212121' }}>{campaignPrediction.roi}</Typography>
+                          <LabelWithTooltip 
+                            label="Return on Investment" 
+                            tooltip="Revenue divided by spend. Above 1.0x means profitable. Industry target: 3-5x ROI"
+                          />
                         </CardContent>
                       </Card>
                     </Grid>
                   </Grid>
-                  <Box sx={{ mt: 2 }}>
-                    <Chip label="Campaign Model: MAPE 64%" size="small" color="warning" />
-                  </Box>
                 </>
               )}
             </Paper>
@@ -257,15 +285,24 @@ function ModelingDashboard() {
                 User Behavior Metrics
               </Typography>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Day 1 Retention</Typography>
+                <LabelWithTooltip 
+                  label="Day 1 Retention" 
+                  tooltip="Percentage of users who return the day after installing. Industry benchmark: 40-60%. Higher D1 retention indicates better product-market fit."
+                />
                 <Slider value={retentionD1} onChange={(e, v) => setRetentionD1(v)} min={0} max={1} step={0.05} valueLabelDisplay="auto" valueLabelFormat={(v) => `${(v*100).toFixed(0)}%`} />
               </Box>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Day 7 Retention</Typography>
+                <LabelWithTooltip 
+                  label="Day 7 Retention" 
+                  tooltip="Percentage of users still active after 7 days. Industry benchmark: 20-40%. Strong D7 retention predicts high LTV."
+                />
                 <Slider value={retentionD7} onChange={(e, v) => setRetentionD7(v)} min={0} max={1} step={0.05} valueLabelDisplay="auto" valueLabelFormat={(v) => `${(v*100).toFixed(0)}%`} />
               </Box>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Sessions (7 days)</Typography>
+                <LabelWithTooltip 
+                  label="Sessions (7 days)" 
+                  tooltip="Number of times user opens the app in first 7 days. More sessions = higher engagement = higher LTV. Power users: 20+ sessions."
+                />
                 <Slider value={sessionCount} onChange={(e, v) => setSessionCount(v)} min={1} max={50} valueLabelDisplay="auto" />
               </Box>
               <Button variant="contained" fullWidth onClick={handleLtvPredict}>
@@ -280,28 +317,37 @@ function ModelingDashboard() {
               </Typography>
               {!ltvPrediction ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-                  <Typography color="text.secondary">Adjust metrics and click "Predict LTV"</Typography>
+                  <Typography sx={{ color: '#666' }}>Adjust metrics and click "Predict LTV"</Typography>
                 </Box>
               ) : (
                 <>
+                  <Box sx={{ mb: 2, p: 1.5, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                    <Typography variant="caption" sx={{ color: '#212121', fontWeight: 600 }}>Model Accuracy:</Typography>
+                    <Typography variant="body2" sx={{ color: '#424242' }}>Neural Network (3-layer) - RMSE $0.30</Typography>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Trained on 500K users</Typography>
+                  </Box>
                   <Card sx={{ bgcolor: '#e8f5e9', mb: 2 }}>
                     <CardContent>
                       <AttachMoneyIcon color="success" sx={{ fontSize: 40 }} />
-                      <Typography variant="h3" sx={{ fontWeight: 600, my: 2 }}>
+                      <Typography variant="h3" sx={{ fontWeight: 600, my: 2, color: '#212121' }}>
                         {ltvPrediction.ltv}
                       </Typography>
-                      <Typography variant="body1" color="text.secondary">
-                        Predicted 180-day LTV
-                      </Typography>
+                      <LabelWithTooltip 
+                        label="Predicted 180-day LTV" 
+                        tooltip="Expected total revenue this user will generate over 180 days, including in-app purchases and ad revenue"
+                      />
                     </CardContent>
                   </Card>
                   <Box sx={{ mb: 2 }}>
-                    <Typography variant="body2" gutterBottom><strong>User Segment:</strong> {ltvPrediction.segment}</Typography>
-                    <Typography variant="body2" gutterBottom><strong>Model Confidence:</strong> {ltvPrediction.confidence}</Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+                      <Typography variant="body2" sx={{ color: '#212121' }}><strong>User Segment:</strong> {ltvPrediction.segment}</Typography>
+                      <Tooltip title="Power User: >$15 LTV | Regular: $8-15 | Casual: <$8" arrow>
+                        <IconButton size="small" sx={{ ml: 0.5, p: 0.5 }}>
+                          <InfoOutlinedIcon sx={{ fontSize: 16 }} />
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
                   </Box>
-                  <Alert severity="info">
-                    LTV Model trained on 500K users with RMSE of $0.30 - highly accurate predictions!
-                  </Alert>
                 </>
               )}
             </Paper>
@@ -344,11 +390,17 @@ function ModelingDashboard() {
                 User Engagement Metrics
               </Typography>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Days Since Last Session</Typography>
+                <LabelWithTooltip 
+                  label="Days Since Last Session" 
+                  tooltip="How many days since user last opened the app. 0-3 days: Active | 4-7 days: At Risk | 8+ days: High Churn Risk"
+                />
                 <Slider value={daysSinceLastSession} onChange={(e, v) => setDaysSinceLastSession(v)} min={0} max={30} valueLabelDisplay="auto" />
               </Box>
               <Box sx={{ mb: 3 }}>
-                <Typography gutterBottom>Avg Session Duration (seconds)</Typography>
+                <LabelWithTooltip 
+                  label="Avg Session Duration (seconds)" 
+                  tooltip="Average time user spends per session. <180s: Low engagement | 180-600s: Medium | 600s+: High engagement"
+                />
                 <Slider value={avgSessionDuration} onChange={(e, v) => setAvgSessionDuration(v)} min={30} max={1800} step={30} valueLabelDisplay="auto" />
               </Box>
               <Button variant="contained" fullWidth onClick={handleChurnPredict}>
@@ -363,29 +415,32 @@ function ModelingDashboard() {
               </Typography>
               {!churnPrediction ? (
                 <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 300 }}>
-                  <Typography color="text.secondary">Adjust metrics and click "Predict Churn Risk"</Typography>
+                  <Typography sx={{ color: '#666' }}>Adjust metrics and click "Predict Churn Risk"</Typography>
                 </Box>
               ) : (
                 <>
+                  <Box sx={{ mb: 2, p: 1.5, bgcolor: '#f5f5f5', borderRadius: 1 }}>
+                    <Typography variant="caption" sx={{ color: '#212121', fontWeight: 600 }}>Model Accuracy:</Typography>
+                    <Typography variant="body2" sx={{ color: '#424242' }}>Neural Network (3-layer) - AUC-ROC 1.0</Typography>
+                    <Typography variant="caption" sx={{ color: '#666' }}>Perfect classification accuracy</Typography>
+                  </Box>
                   <Card sx={{ bgcolor: churnPrediction.risk === 'High' ? '#ffebee' : churnPrediction.risk === 'Medium' ? '#fff3e0' : '#e8f5e9', mb: 2 }}>
                     <CardContent>
                       <PersonOffIcon sx={{ fontSize: 40 }} color={churnPrediction.risk === 'High' ? 'error' : churnPrediction.risk === 'Medium' ? 'warning' : 'success'} />
-                      <Typography variant="h3" sx={{ fontWeight: 600, my: 2 }}>
+                      <Typography variant="h3" sx={{ fontWeight: 600, my: 2, color: '#212121' }}>
                         {churnPrediction.probability}%
                       </Typography>
-                      <Typography variant="body1" color="text.secondary">
-                        Churn Probability
-                      </Typography>
+                      <LabelWithTooltip 
+                        label="Churn Probability" 
+                        tooltip="Likelihood this user will stop using the app in next 7 days. 0-30%: Low Risk | 30-70%: Medium Risk | 70%+: High Risk"
+                      />
                       <Chip label={`${churnPrediction.risk} Risk`} color={churnPrediction.risk === 'High' ? 'error' : churnPrediction.risk === 'Medium' ? 'warning' : 'success'} sx={{ mt: 2 }} />
                     </CardContent>
                   </Card>
                   <Alert severity={churnPrediction.risk === 'High' ? 'error' : churnPrediction.risk === 'Medium' ? 'warning' : 'success'}>
-                    <Typography variant="body2" sx={{ fontWeight: 600 }}>Recommended Action:</Typography>
-                    <Typography variant="body2">{churnPrediction.recommendation}</Typography>
+                    <Typography variant="body2" sx={{ fontWeight: 600, color: '#212121' }}>Recommended Action:</Typography>
+                    <Typography variant="body2" sx={{ color: '#424242' }}>{churnPrediction.recommendation}</Typography>
                   </Alert>
-                  <Box sx={{ mt: 2 }}>
-                    <Chip label="Churn Model: AUC-ROC 1.0" size="small" color="success" />
-                  </Box>
                 </>
               )}
             </Paper>
