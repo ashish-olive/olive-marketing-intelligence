@@ -82,10 +82,10 @@ function SignalsDashboard() {
 
   return (
     <Container maxWidth="xl">
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: '#1a1a1a', fontWeight: 600 }}>
         Performance Signals
       </Typography>
-      <Typography variant="body1" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
+      <Typography variant="body1" gutterBottom sx={{ mb: 3, color: '#555555' }}>
         AI-powered insights and recommended actions
       </Typography>
 

@@ -21,12 +21,12 @@ const theme = createTheme({
       main: '#ed6c02',
     },
     background: {
-      default: '#f5f5f5',
+      default: '#fafafa',      // Slightly darker background
       paper: '#ffffff',
     },
     text: {
-      primary: '#212121',      // Much darker for better contrast
-      secondary: '#424242',    // Darker secondary text
+      primary: '#1a1a1a',      // Very dark for maximum contrast
+      secondary: '#333333',    // Dark gray for secondary text
     },
   },
   typography: {
@@ -34,40 +34,47 @@ const theme = createTheme({
     h1: {
       fontSize: '2.5rem',
       fontWeight: 600,
-      color: '#212121',
+      color: '#1a1a1a',
     },
     h2: {
       fontSize: '2rem',
       fontWeight: 600,
-      color: '#212121',
+      color: '#1a1a1a',
     },
     h3: {
       fontSize: '1.75rem',
       fontWeight: 600,
-      color: '#212121',
+      color: '#1a1a1a',
     },
     h4: {
       fontSize: '1.5rem',
       fontWeight: 600,
-      color: '#212121',
+      color: '#1a1a1a',
     },
     h5: {
       fontSize: '1.25rem',
       fontWeight: 600,
-      color: '#212121',
+      color: '#1a1a1a',
     },
     h6: {
       fontSize: '1rem',
       fontWeight: 600,
-      color: '#212121',
+      color: '#1a1a1a',
     },
     body1: {
       fontSize: '1rem',
-      color: '#212121',
+      color: '#1a1a1a',
+      lineHeight: 1.6,
     },
     body2: {
       fontSize: '0.875rem',
-      color: '#424242',
+      color: '#333333',
+      lineHeight: 1.5,
+    },
+    caption: {
+      fontSize: '0.75rem',
+      color: '#555555',
+      lineHeight: 1.4,
     },
   },
   components: {
@@ -89,7 +96,14 @@ const theme = createTheme({
     MuiTypography: {
       styleOverrides: {
         colorTextSecondary: {
-          color: '#424242', // Darker secondary text
+          color: '#333333', // Much darker secondary text for better contrast
+        },
+      },
+    },
+    MuiTableCell: {
+      styleOverrides: {
+        root: {
+          color: '#1a1a1a', // Dark text in tables
         },
       },
     },

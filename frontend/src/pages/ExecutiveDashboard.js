@@ -55,10 +55,10 @@ function ExecutiveDashboard() {
 
   return (
     <Container maxWidth="xl">
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom sx={{ color: '#1a1a1a', fontWeight: 600 }}>
         Executive Dashboard
       </Typography>
-      <Typography variant="body1" color="text.secondary" gutterBottom sx={{ mb: 3 }}>
+      <Typography variant="body1" gutterBottom sx={{ mb: 3, color: '#555555' }}>
         High-level performance metrics and trends
       </Typography>
 
@@ -70,14 +70,16 @@ function ExecutiveDashboard() {
             value={`$${summary?.total_spend?.toLocaleString() || 0}`}
             subtitle="Last 30 days"
             icon={AttachMoneyIcon}
+            tooltip="Total marketing spend across all paid channels (Meta, Google, TikTok, Apple Search) in the last 30 days. This is your total acquisition budget."
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
           <KPICard
             title="Total Installs"
             value={(summary?.total_installs || 0).toLocaleString()}
-            subtitle={`${(summary?.organic_installs || 0).toLocaleString()} organic`}
+            subtitle={`${summary?.organic_installs?.toLocaleString() || 0} organic`}
             icon={PeopleIcon}
+            tooltip="Total new users acquired in the last 30 days, including both paid (from marketing campaigns) and organic (from app store search, word-of-mouth, etc.) installs."
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -86,6 +88,7 @@ function ExecutiveDashboard() {
             value={`$${summary?.blended_cac?.toFixed(2) || 0}`}
             subtitle="Cost per install"
             icon={TrendingUpIcon}
+            tooltip="Blended Customer Acquisition Cost - average cost to acquire one user across all channels. Calculated as Total Spend ÷ Total Installs. Lower is better. Target: <$3.00"
           />
         </Grid>
         <Grid item xs={12} sm={6} md={3}>
@@ -94,43 +97,102 @@ function ExecutiveDashboard() {
             value={`${summary?.roas_30d?.toFixed(2) || 0}x`}
             subtitle={`LTV/CAC: ${summary?.ltv_cac_ratio?.toFixed(2) || 0}x`}
             icon={TrendingUpIcon}
+            tooltip="Return on Ad Spend - revenue generated divided by marketing spend over 30 days. Above 1.0x means profitable. LTV/CAC ratio shows long-term profitability. Target ROAS: 3-5x"
           />
         </Grid>
       </Grid>
 
       {/* Trends Chart */}
       <Paper sx={{ p: 3 }}>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ color: '#1a1a1a', fontWeight: 600 }}>
           Daily Performance Trends
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
+          Spend and Installs over time (CPI excluded due to scale difference)
         </Typography>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={trends}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="date" />
-            <YAxis yAxisId="left" />
-            <YAxis yAxisId="right" orientation="right" />
-            <Tooltip />
-            <Legend />
+            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis 
+              dataKey="date" 
+              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#999"
+            />
+            <YAxis 
+              yAxisId="left" 
+              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#999"
+              label={{ value: 'Spend ($)', angle: -90, position: 'insideLeft', fill: '#666' }}
+            />
+            <YAxis 
+              yAxisId="right" 
+              orientation="right"
+              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#999"
+              label={{ value: 'Installs', angle: 90, position: 'insideRight', fill: '#666' }}
+            />
+            <Tooltip 
+              contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc' }}
+              labelStyle={{ color: '#333', fontWeight: 600 }}
+            />
+            <Legend wrapperStyle={{ color: '#333' }} />
             <Line
               yAxisId="left"
               type="monotone"
               dataKey="spend"
-              stroke="#8884d8"
+              stroke="#1976d2"
+              strokeWidth={2}
               name="Spend ($)"
+              dot={false}
             />
             <Line
               yAxisId="right"
               type="monotone"
               dataKey="installs"
-              stroke="#82ca9d"
+              stroke="#2e7d32"
+              strokeWidth={2}
               name="Installs"
+              dot={false}
             />
+          </LineChart>
+        </ResponsiveContainer>
+      </Paper>
+
+      {/* CPI Trends Chart - Separate due to scale */}
+      <Paper sx={{ p: 3, mt: 3 }}>
+        <Typography variant="h6" gutterBottom sx={{ color: '#1a1a1a', fontWeight: 600 }}>
+          Cost Per Install (CPI) Trends
+        </Typography>
+        <Typography variant="body2" sx={{ mb: 2, color: '#666' }}>
+          Average CPI across all channels over time
+        </Typography>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart data={trends}>
+            <CartesianGrid strokeDasharray="3 3" stroke="#e0e0e0" />
+            <XAxis 
+              dataKey="date" 
+              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#999"
+            />
+            <YAxis 
+              tick={{ fill: '#666', fontSize: 12 }}
+              stroke="#999"
+              label={{ value: 'CPI ($)', angle: -90, position: 'insideLeft', fill: '#666' }}
+              domain={[0, 'auto']}
+            />
+            <Tooltip 
+              contentStyle={{ backgroundColor: '#fff', border: '1px solid #ccc' }}
+              labelStyle={{ color: '#333', fontWeight: 600 }}
+              formatter={(value) => `$${value.toFixed(2)}`}
+            />
+            <Legend wrapperStyle={{ color: '#333' }} />
             <Line
-              yAxisId="left"
               type="monotone"
               dataKey="cpi"
-              stroke="#ffc658"
+              stroke="#f57c00"
+              strokeWidth={3}
               name="CPI ($)"
+              dot={false}
             />
           </LineChart>
         </ResponsiveContainer>
