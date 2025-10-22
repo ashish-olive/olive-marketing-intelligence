@@ -74,7 +74,7 @@ class MLService:
             if churn_path.exists():
                 checkpoint = torch.load(churn_path, map_location=self.device)
                 
-                from models.architectures import ChurnPredictor
+                from ml_models.models.architectures import ChurnPredictor
                 
                 model = ChurnPredictor(input_size=checkpoint['input_size'])
                 model.load_state_dict(checkpoint['model_state_dict'])

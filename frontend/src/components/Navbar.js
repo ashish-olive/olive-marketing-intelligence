@@ -15,6 +15,7 @@ function Navbar() {
     { label: 'Paid Media', path: '/paid-media' },
     { label: 'Organic', path: '/organic' },
     { label: 'Signals', path: '/signals' },
+    { label: '🎯 Modeling', path: '/modeling' },
   ];
 
   return (
