@@ -10,8 +10,11 @@ COPY backend/requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the backend application code
+# Copy only the necessary backend files
 COPY backend/ .
+
+# Copy shared modules (needed for database models)
+COPY shared/ ./shared/
 
 # Expose the port that Railway will use
 EXPOSE $PORT
