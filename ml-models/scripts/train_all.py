@@ -10,13 +10,15 @@ import json
 from datetime import datetime
 import argparse
 
-# Add project root to path
+# Add project root and ml-models to path
 project_root = Path(__file__).parent.parent.parent
+ml_models_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
+sys.path.insert(0, str(ml_models_root))
 
-from ml_models.trainers.ltv_predictor import train_ltv_model
-from ml_models.trainers.campaign_forecaster import train_campaign_model
-from ml_models.trainers.churn_predictor import train_churn_model
+from trainers.ltv_predictor import train_ltv_model
+from trainers.campaign_forecaster import train_campaign_model
+from trainers.churn_predictor import train_churn_model
 
 
 def main():

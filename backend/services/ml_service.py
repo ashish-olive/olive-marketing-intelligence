@@ -43,7 +43,8 @@ class MLService:
                 checkpoint = torch.load(ltv_path, map_location=self.device)
                 
                 # Import model architecture
-                from ml_models.models.architectures import LTVPredictor
+                sys.path.insert(0, str(models_dir.parent))
+                from models.architectures import LTVPredictor
                 
                 model = LTVPredictor(input_size=checkpoint['input_size'])
                 model.load_state_dict(checkpoint['model_state_dict'])
@@ -58,7 +59,7 @@ class MLService:
             if campaign_path.exists():
                 checkpoint = torch.load(campaign_path, map_location=self.device)
                 
-                from ml_models.models.architectures import CampaignForecaster
+                from models.architectures import CampaignForecaster
                 
                 model = CampaignForecaster(input_size=checkpoint['input_size'])
                 model.load_state_dict(checkpoint['model_state_dict'])
@@ -73,7 +74,7 @@ class MLService:
             if churn_path.exists():
                 checkpoint = torch.load(churn_path, map_location=self.device)
                 
-                from ml_models.models.architectures import ChurnPredictor
+                from models.architectures import ChurnPredictor
                 
                 model = ChurnPredictor(input_size=checkpoint['input_size'])
                 model.load_state_dict(checkpoint['model_state_dict'])
