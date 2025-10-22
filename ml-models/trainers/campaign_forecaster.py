@@ -146,7 +146,13 @@ def train_campaign_model(db_path, device, epochs=100, batch_size=32, save_path=N
     print(f"Model: {sum(p.numel() for p in model.parameters()):,} parameters")
     print(f"Device: {device}\n")
     
-    criterion = nn.MSELoss()
+    # Use MAPE loss for business-relevant predictions
+    def mape_loss(predictions, targets):
+        """Mean Absolute Percentage Error - better for business decisions"""
+        epsilon = 1e-8  # Avoid division by zero
+        return torch.mean(torch.abs((targets - predictions) / (targets + epsilon))) * 100
+    
+    criterion = mape_loss  # Changed from MSELoss to MAPE
     optimizer = optim.Adam(model.parameters(), lr=0.001)
     scheduler = optim.lr_scheduler.ReduceLROnPlateau(optimizer, patience=5, factor=0.5)
     
@@ -187,7 +193,7 @@ def train_campaign_model(db_path, device, epochs=100, batch_size=32, save_path=N
         scheduler.step(val_loss)
         
         if (epoch + 1) % 10 == 0:
-            print(f"Epoch [{epoch+1}/{epochs}] - Train: {train_loss:.4f}, Val: {val_loss:.4f}")
+            print(f"Epoch [{epoch+1}/{epochs}] - Train MAPE: {train_loss:.2f}%, Val MAPE: {val_loss:.2f}%")
         
         if val_loss < best_val_loss:
             best_val_loss = val_loss
@@ -223,17 +229,19 @@ def train_campaign_model(db_path, device, epochs=100, batch_size=32, save_path=N
             all_targets.extend(target_batch.cpu().numpy())
     
     test_loss /= len(test_loader)
-    rmse = np.sqrt(test_loss)
     
     all_preds = np.array(all_preds)
     all_targets = np.array(all_targets)
+    
+    # Calculate both metrics for comparison
     mape = np.mean(np.abs((all_targets - all_preds) / (all_targets + 1e-8))) * 100
+    rmse = np.sqrt(np.mean((all_targets - all_preds) ** 2))
     
     print("\n" + "="*70)
     print("TRAINING COMPLETE")
     print("="*70)
-    print(f"Test RMSE: ${rmse:.2f}")
-    print(f"Test MAPE: {mape:.2f}%")
+    print(f"Test MAPE: {mape:.2f}% (optimized metric)")
+    print(f"Test RMSE: ${rmse:.2f} (reference only)")
     print(f"Model saved to: {save_path}")
     
     return {
