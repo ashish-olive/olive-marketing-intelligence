@@ -38,6 +38,6 @@ primary_region = "sjc"  # San Jose, California - good for US users
 #   destination = "/data"
 
 [[vm]]
-  memory = "1gb"
+  memory = "2gb"
   cpu_kind = "shared"
   cpus = 1
