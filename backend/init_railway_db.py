@@ -15,7 +15,7 @@ sys.path.insert(0, str(project_root / 'data-pipeline'))
 from flask import Flask
 from shared.data_layer.models import db
 from shared.data_layer.config import AppConfig
-from data_pipeline.generators.complete_data_generator import CompleteDataGenerator
+from generators.complete_data_generator import CompleteDataGenerator
 
 
 def init_railway_database():
