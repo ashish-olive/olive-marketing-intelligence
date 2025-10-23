@@ -19,6 +19,9 @@ COPY ml-models/ ./ml-models/
 # Create instance directory for database
 RUN mkdir -p instance
 
+# Set PYTHONPATH to include all necessary directories
+ENV PYTHONPATH=/app:/app/data-pipeline
+
 # Generate the full database during build
 RUN python init_railway_db.py
 
