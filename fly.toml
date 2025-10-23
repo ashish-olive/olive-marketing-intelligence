@@ -12,8 +12,8 @@ primary_region = "sjc"  # San Jose, California - good for US users
   USE_ML_MODELS = "1"
   DATABASE_URL = "sqlite:///app/instance/marketing.db"
   CORS_ORIGINS = "https://your-frontend.vercel.app,http://localhost:3000"
-  # Skip database generation - we'll upload pre-generated database
-  SKIP_DB_GENERATION = "1"
+  # Generate database at runtime since upload failed
+  # SKIP_DB_GENERATION = "1"
 
 [http_service]
   internal_port = 5000
