@@ -22,17 +22,17 @@ COPY data-pipeline/ ./data-pipeline/
 # Copy ml-models (needed for ML inference)
 COPY ml-models/ ./ml-models/
 
-# Create instance directory for database
+# Create data directory for persistent volume
+RUN mkdir -p /data
+
+# Create instance directory for database (fallback)
 RUN mkdir -p instance
 
 # Set PYTHONPATH to include all necessary directories
 ENV PYTHONPATH=/app:/app/data-pipeline
 
-# Expose the port that Railway will use
-EXPOSE $PORT
+# Expose port 5000 for Fly.io
+EXPOSE 5000
 
-# Make startup script executable
-RUN chmod +x startup.sh
-
-# Set the start command
-CMD ["./startup.sh"]
+# Set the start command for Fly.io
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:5000", "--workers", "2", "--timeout", "120"]

@@ -1,0 +1,38 @@
+# Fly.io configuration for Olive Marketing Intelligence
+# Generated for deployment with persistent storage support
+
+app = "olive-marketing-intelligence"
+primary_region = "sjc"  # San Jose, California - good for US users
+
+[build]
+
+[env]
+  FLASK_ENV = "production"
+  FLASK_DEBUG = "0"
+  USE_ML_MODELS = "1"
+  DATABASE_URL = "sqlite:///data/marketing.db"
+  CORS_ORIGINS = "https://your-frontend.vercel.app,http://localhost:3000"
+
+[http_service]
+  internal_port = 5000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+  [[http_service.checks]]
+    grace_period = "10s"
+    interval = "30s"
+    method = "GET"
+    timeout = "5s"
+    path = "/api/health"
+
+[mounts]
+  source = "database_vol"
+  destination = "/data"
+
+[[vm]]
+  memory = "1gb"
+  cpu_kind = "shared"
+  cpus = 1
