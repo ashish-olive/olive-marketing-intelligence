@@ -32,6 +32,47 @@ AI-powered marketing analytics with real-time performance signals, ML-driven pre
 
 ---
 
+## 🚀 Local Development Setup
+
+### **Quick Start**
+
+1. **Clone and setup:**
+   ```bash
+   git clone <repository-url>
+   cd olive-marketing-intelligence
+   ```
+
+2. **Backend setup:**
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   cp .env.example .env  # Copy environment template
+   python app.py
+   ```
+
+3. **Frontend setup:**
+   ```bash
+   cd frontend
+   npm install
+   cp .env.example .env  # Copy environment template
+   npm start
+   ```
+
+4. **Access the application:**
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:5001
+   - Health check: http://localhost:5001/api/health
+
+### **Configuration**
+
+- **Backend**: Edit `backend/.env` for API settings
+- **Frontend**: Edit `frontend/.env` for API URL
+- **Database**: SQLite database in `instance/marketing.db`
+
+---
+
 ## 📁 Project Structure
 
 ```
