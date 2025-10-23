@@ -1,6 +1,6 @@
 """
 SQLAlchemy models for Olive Marketing Intelligence Platform
-Supports both cloud data generation and local API usage
+Supports both data generation and local API usage
 """
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime

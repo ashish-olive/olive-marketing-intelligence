@@ -1,4 +1,4 @@
-# Data Pipeline Requirements (Cloud - Colab)
+# Data Pipeline Requirements (Colab)
 # For data generation only
 
 # Core dependencies (Colab-compatible versions)

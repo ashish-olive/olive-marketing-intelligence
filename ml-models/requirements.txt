@@ -1,4 +1,4 @@
-# ML Models Requirements (Cloud - Colab with GPU)
+# ML Models Requirements (Colab with GPU)
 # For training ML models
 
 # PyTorch with CUDA support (latest compatible version)

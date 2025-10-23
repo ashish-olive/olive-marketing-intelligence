@@ -1,6 +1,6 @@
 """
 Database configuration for Olive Marketing Intelligence
-Supports both cloud (Colab) and local environments
+Supports both data generation (Colab) and local environments
 """
 import os
 from pathlib import Path

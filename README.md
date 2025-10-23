@@ -80,10 +80,10 @@ olive-marketing-intelligence/
 ├── shared/                      # Shared infrastructure
 │   ├── data_layer/             # Database models & repositories
 │   └── utils/                  # Utilities & helpers
-├── data-pipeline/              # 🔵 CLOUD: Data generation
+├── data-pipeline/              # Data generation
 │   ├── generators/             # Data generation logic
 │   └── scripts/                # CLI scripts
-├── ml-models/                  # 🟢 CLOUD: ML training
+├── ml-models/                  # ML training
 │   ├── trainers/               # Training scripts
 │   ├── models/                 # Model architectures
 │   └── trained_models/         # Saved models (gitignored)
@@ -108,7 +108,7 @@ olive-marketing-intelligence/
 
 ---
 
-## 📊 Cloud Workflow (Google Colab)
+## 📊 Data Generation Workflow
 
 ### **1. Clone Repository in Colab**
 ```python
@@ -334,7 +334,7 @@ MIT License
 
 ## 🚀 Quick Start Summary
 
-**Cloud (Colab):**
+**Data Generation (Colab):**
 ```bash
 1. Clone repo
 2. Generate data (3 min)
