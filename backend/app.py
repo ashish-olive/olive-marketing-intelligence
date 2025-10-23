@@ -2,6 +2,7 @@
 Olive Marketing Intelligence - Backend API
 Flask application with ML inference capabilities
 """
+import os
 import sys
 from pathlib import Path
 from flask import Flask, jsonify, request
