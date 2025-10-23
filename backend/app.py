@@ -5,6 +5,10 @@ Flask application with ML inference capabilities
 import os
 import sys
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime, timedelta
