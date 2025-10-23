@@ -29,6 +29,19 @@ def create_app():
     db.init_app(app)
     CORS(app, origins=AppConfig.CORS_ORIGINS)
     
+    # Generate database if needed (for Fly.io deployment)
+    with app.app_context():
+        if os.getenv('SKIP_DB_GENERATION') != '1':
+            print("Database generation not skipped - will generate if needed")
+            try:
+                from startup_with_db import generate_database
+                generate_database()
+            except Exception as e:
+                print(f"Database generation failed: {e}")
+                print("App will start without database - some endpoints may fail")
+        else:
+            print("Skipping database generation - using pre-uploaded database")
+    
     return app
 
 
@@ -438,18 +451,7 @@ if __name__ == '__main__':
     print(f"Health check: http://localhost:{AppConfig.API_PORT}/api/health")
     print("="*70 + "\n")
     
-    # Check if we should skip database generation (for Fly.io)
-    if os.getenv('SKIP_DB_GENERATION') == '1':
-        print("Skipping database generation - using pre-uploaded database")
-    else:
-        print("Database generation not skipped - will generate if needed")
-        # Import and run database generation
-        try:
-            from startup_with_db import generate_database
-            generate_database()
-        except Exception as e:
-            print(f"Database generation failed: {e}")
-            print("App will start without database - some endpoints may fail")
+    # Database generation is now handled in create_app()
     
     app.run(
         host='0.0.0.0',
