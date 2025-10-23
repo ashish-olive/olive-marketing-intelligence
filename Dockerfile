@@ -28,6 +28,9 @@ RUN mkdir -p /data
 # Create instance directory for database (fallback)
 RUN mkdir -p instance
 
+# Set proper permissions for database directory
+RUN chmod 777 instance
+
 # Set PYTHONPATH to include all necessary directories
 ENV PYTHONPATH=/app:/app/data-pipeline
 
