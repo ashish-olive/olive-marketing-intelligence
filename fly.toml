@@ -30,9 +30,9 @@ primary_region = "sjc"  # San Jose, California - good for US users
     timeout = "5s"
     path = "/api/health"
 
-[mounts]
-  source = "database_vol"
-  destination = "/data"
+# [mounts]
+#   source = "database_vol"
+#   destination = "/data"
 
 [[vm]]
   memory = "1gb"
