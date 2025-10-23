@@ -20,7 +20,7 @@ COPY ml-models/ ./ml-models/
 RUN mkdir -p instance
 
 # Generate the full database during build
-RUN cd backend && python init_railway_db.py
+RUN python init_railway_db.py
 
 # Expose the port that Railway will use
 EXPOSE $PORT
