@@ -4,6 +4,11 @@ FROM python:3.9-slim
 # Set working directory
 WORKDIR /app
 
+# Install system dependencies including SQLite
+RUN apt-get update && apt-get install -y \
+    sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy requirements first for better caching
 COPY backend/requirements.txt .
 
