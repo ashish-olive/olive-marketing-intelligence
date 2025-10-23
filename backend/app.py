@@ -443,6 +443,13 @@ if __name__ == '__main__':
         print("Skipping database generation - using pre-uploaded database")
     else:
         print("Database generation not skipped - will generate if needed")
+        # Import and run database generation
+        try:
+            from startup_with_db import generate_database
+            generate_database()
+        except Exception as e:
+            print(f"Database generation failed: {e}")
+            print("App will start without database - some endpoints may fail")
     
     app.run(
         host='0.0.0.0',
