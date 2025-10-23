@@ -438,6 +438,12 @@ if __name__ == '__main__':
     print(f"Health check: http://localhost:{AppConfig.API_PORT}/api/health")
     print("="*70 + "\n")
     
+    # Check if we should skip database generation (for Fly.io)
+    if os.getenv('SKIP_DB_GENERATION') == '1':
+        print("Skipping database generation - using pre-uploaded database")
+    else:
+        print("Database generation not skipped - will generate if needed")
+    
     app.run(
         host='0.0.0.0',
         port=AppConfig.API_PORT,
