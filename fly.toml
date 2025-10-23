@@ -6,6 +6,9 @@ primary_region = "sjc"  # San Jose, California - good for US users
 
 [build]
 
+[deploy]
+  release_command = "python -c 'from startup_with_db import generate_database; generate_database()'"
+
 [env]
   FLASK_ENV = "production"
   FLASK_DEBUG = "0"
@@ -24,10 +27,10 @@ primary_region = "sjc"  # San Jose, California - good for US users
   processes = ["app"]
 
   [[http_service.checks]]
-    grace_period = "10s"
-    interval = "30s"
+    grace_period = "30m"
+    interval = "60s"
     method = "GET"
-    timeout = "5s"
+    timeout = "10s"
     path = "/api/health"
 
 # [mounts]
