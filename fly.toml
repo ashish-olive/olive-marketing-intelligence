@@ -6,8 +6,8 @@ primary_region = "sjc"  # San Jose, California - good for US users
 
 [build]
 
-[deploy]
-  release_command = "python -c 'from startup_with_db import generate_database; generate_database()'"
+# [deploy]
+#   release_command = "python -c 'from startup_with_db import generate_database; generate_database()'"
 
 [env]
   FLASK_ENV = "production"
